@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,6 +27,7 @@ import java.net.URLEncoder;
 public class MainActivity extends AppCompatActivity {
 
     private EditText usernameField, passwordField;
+    private ProgressBar progressBar;
     private Button loginBtn;
 
     @Override
@@ -50,7 +52,10 @@ public class MainActivity extends AppCompatActivity {
     private void initLayouts() {
         usernameField = findViewById(R.id.usernameField);
         passwordField = findViewById(R.id.passwordField);
+        progressBar = findViewById(R.id.progressBar);
         loginBtn = findViewById(R.id.loginBtn);
+
+        progressBar.setVisibility(View.GONE);
     }
 
     private class LoginTask extends AsyncTask<String, Void, String> {
@@ -66,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
             super.onPreExecute();
             alertDialog = new AlertDialog.Builder(context).create();
             alertDialog.setTitle("Etat de connexion");
+
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -115,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(s);
 
             String message = "";
+            progressBar.setVisibility(View.GONE);
 
             if (s.contains("server_fail")) {
                 message = "Cannot connect to server !";
