@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             String result = "";
             String user = strings[0], pass = strings[1];
-            String dbURL = "http://192.168.1.5/ExpertMaintenance/login.php";
+            String dbURL = "http://192.168.1.3/ExpertMaintenance/login.php";
 
             try {
                 URL url = new URL(dbURL);
@@ -113,13 +113,29 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            alertDialog.setMessage(s);
-            alertDialog.show();
-            if (s.contains("success")) {
+
+            String message = "";
+
+            if (s.contains("server_fail")) {
+                message = "Cannot connect to server !";
+                displayAlertDialog(message);
+            } else if (s.contains("login_fail")) {
+                message = "Wrong username or password !";
+                displayAlertDialog(message);
+            }
+            else if (s.contains("login_success")) {
+                message = "Login successful !";
+                displayAlertDialog(message);
+
                 Intent i = new Intent();
                 i.setClass(context.getApplicationContext(), WelcomeActivity.class);
                 context.startActivity(i);
             }
+        }
+
+        private void displayAlertDialog(String string) {
+            alertDialog.setMessage(string);
+            alertDialog.show();
         }
     }
 
